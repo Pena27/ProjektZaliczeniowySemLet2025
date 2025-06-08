@@ -19,8 +19,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void nacisniecie_przycisku(int wartosc);
-
+    void obsluzPrzycisk(int d);
     void on_pushButton_login_clicked();
 
     void on_pushButton_zarejestruj_sie_clicked();

@@ -9,10 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui -> przycisk_anuluj ->setProperty("id_przycisku",1);
 
-
-    QString sciezka = QDir::toNativeSeparators("../baza1.db"); //tu trzeba wrzucic baze do folderu w ktorym znajduje sie projekt
+    QString sciezka = QDir::toNativeSeparators("C:/Users/karol/Documents/vabank/baza1.db"); //tu trzeba wrzucic baze do folderu w ktorym znajduje sie projekt
     qDebug() << "Ścieżka do bazy:" << sciezka;
 
     DB_Connection = QSqlDatabase::addDatabase("QSQLITE");
@@ -101,20 +99,21 @@ void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wy
     }
 }
 
-void MainWindow::nacisniecie_przycisku(int wartosc)
+void MainWindow::obsluzPrzycisk(int wartosc)
 {
     switch(wartosc)
     {
-    case 0: //logowanie do banku
-        ui->stackedWidget->setCurrentIndex(1);
+    case 0:
+        ui->stackedWidget->setCurrentIndex(0);
         break;
-    case 1: //anuluj 2
-         ui->stackedWidget->setCurrentIndex(1);
+    case 1:
+        ui->stackedWidget->setCurrentIndex(1);
         break;
     case 3:
         ui->stackedWidget->setCurrentIndex(3);
         break;
     default:
+        qDebug() << "Nieobsługiwany indeks:" << wartosc;
         break;
     }
 }
@@ -146,18 +145,6 @@ void MainWindow::on_pushButton_anuluj_3_clicked() // przejscie do wyboru startow
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 void MainWindow::on_pushButton_wplata_clicked()
 {
     bool okKwota, okId;
@@ -186,12 +173,6 @@ void MainWindow::on_pushButton_wplata_clicked()
     }
 
 }
-
-
-
-
-
-
 
 
 void MainWindow::on_pushButton_wyplata_clicked() //podumam czy nie da sie tego zorbic w 1 funkcji i ifa czy wplata czy wyplata
@@ -228,8 +209,9 @@ void MainWindow::on_pushButton_wyplata_clicked() //podumam czy nie da sie tego z
 
     bilans2 = q3.value("balans").toDouble();
 
-    if (q.exec() && bilans1!=bilans2){ //Gdzie wartosc bilans2? W tym kodzie jest nieprzypisany chyba ze jest w SQL taki parametr {
-        db.commit();
+    if (q.exec() && bilans1!=bilans2) //Gdzie wartosc bilans2? W tym kodzie jest nieprzypisany chyba ze jest w SQL taki parametr {
+    {
+    db.commit();
         qDebug() << bilans1;
         qDebug() << bilans2;
         QMessageBox::information(this, "Sukces", "Wypłata wykonana pomyślnie.");
