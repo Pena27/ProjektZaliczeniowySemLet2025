@@ -32,6 +32,17 @@ Makefile*
 *.qm
 *.prl
 
+# Qt Creator build and cache files
+build/
+*.pro.user
+*.pro.user.*
+*.autosave
+*.qmake.stash
+
+# Qt Creator Clangd cache
+.qt_clangd/
+
+
 # Qt unit tests
 target_wrapper.*
 
