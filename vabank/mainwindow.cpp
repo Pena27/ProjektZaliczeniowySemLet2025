@@ -9,8 +9,25 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    //tablica nazw przyciskow z glownego okna do automatycznego przypisania
+    QStringList tablicaNazwPrzyciskow = {"pushButton_logowanie_do_banku","pushButton_bankomat",
+        "pushButton_anuluj_2","pushButton_anuluj_3","pushButton_zarejestruj_sie","pushButton_anuluj"};
 
-    QString sciezka = QDir::toNativeSeparators("C:/Users/karol/Documents/vabank/baza1.db"); //tu trzeba wrzucic baze do folderu w ktorym znajduje sie projekt
+    //petla przypisujaca nazwy przyciskow do akcji w UI
+    for (int i = 0; i < tablicaNazwPrzyciskow.size(); ++i) {
+        QString nazwa = tablicaNazwPrzyciskow[i];
+        QPushButton *przycisk = findChild<QPushButton*>(nazwa);
+        if (przycisk) {
+            connect(przycisk, &QPushButton::clicked, this, [=]() {
+                obsluzPrzycisk(i);
+            });
+            qDebug() << "Połaczono przycisk:" << nazwa << "z wartościa:" << i;
+        } else {
+            qDebug() << "Nie znaleziono przycisku:" << nazwa;
+        }
+    }
+
+    QString sciezka = QDir::toNativeSeparators("C:/Users/piotr/Desktop/ProjektZaliczeniowySemLet2025/vabank/baza1.db");
     qDebug() << "Ścieżka do bazy:" << sciezka;
 
     DB_Connection = QSqlDatabase::addDatabase("QSQLITE");
@@ -27,84 +44,28 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-void MainWindow::on_pushButton_login_clicked()
-{
-    DB_Connection.open();
-    QSqlDatabase::database().transaction();
-
-    QString login = ui->lineEdit_login->text();
-    QString password = ui->lineEdit_2_password->text();
-    QSqlQuery query;
-    query.prepare("SELECT id FROM login WHERE login = :login AND haslo = :haslo LIMIT 1"); //trzeba zrobic mechanizm sprawdzania w bazie, nie limitujac w sql
-    query.bindValue(":login", login);
-    query.bindValue(":haslo", password);
-    if (query.exec()) {
-        if (query.exec() && query.next()) { //czemu tu nie ma tylko query.next(), przeciez query.exec musi byc 1
-            idzbazy = query.value(0).toInt();
-            qDebug() << "Zalogowano. ID uzytkownika:" << idzbazy;
-            secondwindow *second = new secondwindow(idzbazy);
-            second->show();
-            this->close();
-        } else {
-            qDebug() << "Błędny login lub hasło";
-            QMessageBox::warning(this, "Błąd logowania", "Błędny login lub hasło.");
-        }
-    } else {
-        qDebug() << "Błąd zapytania: " << query.lastError().text();
-    }
-
-    QSqlDatabase::database().commit(); //to powinno byc w ifie, po co commit jak sie wywalilo zapytanie
-    DB_Connection.close();
-}
-
-
-void MainWindow::on_pushButton_zarejestruj_sie_clicked() // przejscie do strony z rejestracja
-{
-    ui->stackedWidget->setCurrentIndex(2);
-}
-
-
-void MainWindow::on_pushButton_anuluj_clicked() // cofanie do logowania
-{
-    ui->stackedWidget->setCurrentIndex(1);
-}
-
-
-void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wysylanie danych do bazy.
-{
-    QStringList atrybuty = {
-        "login", "haslo", "imie", "nazwisko", "email",
-        "numer_tel", "Ulica_i_nr", "Miasto"
-    };
-
-    QStringList atrybutyUi = {
-        "lineEdit_login_2", "lineEdit_haslo_2", "lineEdit_imie", "lineEdit_nazwisko",
-        "lineEdit_adres_email", "lineEdit_numer_telefonu", "lineEdit_ulica", "lineEdit_miasto"
-    };
-
-    QMap<QString, QString> dane;
-
-    for (int i = 0; i < atrybuty.size(); ++i) {
-        QLineEdit* lineEdit = this->findChild<QLineEdit*>(atrybutyUi[i]);
-        if (lineEdit) {
-            dane[atrybutyUi[i]] = lineEdit->text();
-        }
-    }
-}
-
+//funkcja obslugujaca poszczegolne przyciski
 void MainWindow::obsluzPrzycisk(int wartosc)
 {
     switch(wartosc)
     {
-    case 0:
-        ui->stackedWidget->setCurrentIndex(0);
-        break;
-    case 1:
+    case 0: //przycisk logowanie do banki clicked // przejscie do strony z logowanniem //
         ui->stackedWidget->setCurrentIndex(1);
         break;
-    case 3:
+    case 1: //bankomat clicked // przejscie do strony bankomatu wplaty/wypaty //
         ui->stackedWidget->setCurrentIndex(3);
+        break;
+    case 2: //anuluj_2 clicked // przejscie do wyboru startowego z panelu logowania //
+        ui->stackedWidget->setCurrentIndex(0);
+        break;
+    case 3: //anuluj w bankmacie clicked // przejscie do wyboru startowego z bankomatu //
+        ui->stackedWidget->setCurrentIndex(0);
+        break;
+    case 4: // zarejestruj clicked // przejscie do strony z rejestracja //
+        ui->stackedWidget->setCurrentIndex(2);
+        break;
+    case 5: //anuluj_clicked // cofanie do logowania //
+        ui->stackedWidget->setCurrentIndex(1);
         break;
     default:
         qDebug() << "Nieobsługiwany indeks:" << wartosc;
@@ -112,34 +73,8 @@ void MainWindow::obsluzPrzycisk(int wartosc)
     }
 }
 
-void MainWindow::on_pushButton_logowanie_do_banku_clicked() // przejscie do strony z logowanniem
-{
-    ui->stackedWidget->setCurrentIndex(1); //te wszystkie pojedyne funkcje powinny miec parametr liczbowy i wtedy masz 1 funkcje zamiast 4
-}
 
-
-void MainWindow::on_pushButton_bankomat_clicked() // przejscie do strony bankomatu wplaty/wypaty
-{
-    ui->stackedWidget->setCurrentIndex(3);
-}
-
-
-
-void MainWindow::on_pushButton_anuluj_2_clicked() // przejscie do wyboru startowego z panelu logowania
-{
-    ui->stackedWidget->setCurrentIndex(0);
-
-}
-
-
-void MainWindow::on_pushButton_anuluj_3_clicked() // przejscie do wyboru startowego z bankomatu
-{
-    ui->stackedWidget->setCurrentIndex(0);
-
-}
-
-
-void MainWindow::on_pushButton_wplata_clicked()
+void MainWindow::on_pushButton_wplata_clicked() //
 {
     bool okKwota, okId;
     double kwota = ui->lineEdit_kwota_bankomat->text().toDouble(&okKwota);
@@ -169,7 +104,7 @@ void MainWindow::on_pushButton_wplata_clicked()
 }
 
 
-void MainWindow::on_pushButton_wyplata_clicked() //podumam czy nie da sie tego zorbic w 1 funkcji i ifa czy wplata czy wyplata
+void MainWindow::on_pushButton_wyplata_clicked()// //podumam czy nie da sie tego zorbic w 1 funkcji i ifa czy wplata czy wyplata
 {
     bool okKwota, okId;
     double kwota = ui->lineEdit_kwota_bankomat->text().toDouble(&okKwota);
@@ -215,4 +150,93 @@ void MainWindow::on_pushButton_wyplata_clicked() //podumam czy nie da sie tego z
         QMessageBox::critical(this, "Błąd", "Nie udało się wykonać wypłaty. Sprawdź kwote i numer konta(id).");
     }
 }
+
+
+void MainWindow::on_pushButton_login_clicked() //
+{
+    //otwieranie bazy i deklaracja podstawowych zmiennych
+    DB_Connection.open();
+    QSqlDatabase::database().transaction();
+
+    QString login = ui->lineEdit_login->text();
+    QString password = ui->lineEdit_2_password->text();
+    QSqlQuery query;
+
+    //zapytanie do bazy w celu zalogowania
+    query.prepare("SELECT id FROM login WHERE login = :login AND haslo = :haslo LIMIT 1");
+    query.bindValue(":login", login);
+    query.bindValue(":haslo", password);
+
+    //wykonanie zapytania i weryfikacja
+    if (query.exec()) {
+        if ( query.exec()&& query.next()) {
+            idzbazy = query.value(0).toInt();
+            qDebug() << "Zalogowano. ID uzytkownika:" << idzbazy;
+            secondwindow *second = new secondwindow(idzbazy);
+            second->show();
+            this->close();
+        } else {
+            qDebug() << "Błędny login lub hasło";
+            QMessageBox::warning(this, "Błąd logowania", "Błędny login lub hasło.");
+        }
+
+    } else {
+        qDebug() << "Blad zapytania: " << query.lastError().text();
+    }
+    QSqlDatabase::database().commit();
+    DB_Connection.close();
+}
+
+//rejestracja nowego uzytkownika
+void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wysylanie danych do bazy.
+{
+    //lista nazw atrybutow potrzebna do rejestracji
+    QStringList atrybuty = {
+        "login", "haslo", "imie", "nazwisko", "email",
+        "numer_tel", "Ulica_i_nr", "Miasto"
+    };
+
+    // lista nazw atrybutow w UI
+    QStringList atrybutyUi = {
+        "lineEdit_login_2", "lineEdit_haslo_2", "lineEdit_imie", "lineEdit_nazwisko",
+        "lineEdit_adres_email", "lineEdit_numer_telefonu", "lineEdit_ulica", "lineEdit_miasto"
+    };
+
+    //przygotowanie zapytania
+    QSqlQuery query;
+    query.prepare("INSERT INTO login (login, haslo, imie, nazwisko, email, numer_tel, Miasto, Ulica_i_nr) VALUES (:login, :haslo, :imie, :nazwisko, :email, :numer_tel, :Miasto, :Ulica_i_nr)");
+
+
+    //tu jest blad
+
+    //przypisanie wartosci atrybutu -> atrybut w bazie
+    QMap<QString, QString> dane;
+    for (int i = 0; i < atrybuty.size(); ++i) {
+        QLineEdit* lineEdit = this->findChild<QLineEdit*>(atrybutyUi[i]);
+        if (lineEdit) {
+            dane[atrybuty[i]] = lineEdit->text();
+        }
+    }
+
+    //przypisanie wartosci do zapytania
+    for (auto it = dane.begin(); it != dane.end(); ++it) {
+        query.bindValue(":" + it.key(), it.value());
+    }
+
+    //sprawdzenie zapytania
+    if (query.exec())
+    {QMessageBox::information(this, "Sukces", "Dziala");}
+    else
+    {QMessageBox::critical(this, "Błąd", "nie dziala");}
+}
+
+
+
+
+
+
+
+
+
+
 

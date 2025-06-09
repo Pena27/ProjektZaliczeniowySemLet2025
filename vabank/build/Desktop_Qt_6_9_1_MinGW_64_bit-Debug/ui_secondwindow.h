@@ -42,6 +42,7 @@ public:
     QPushButton *pushButton_przelew;
     QTableWidget *tableWidget_historia;
     QLabel *label_8;
+    QPushButton *pushButton_wyloguj;
     QWidget *page_2;
     QWidget *horizontalLayoutWidget_3;
     QHBoxLayout *horizontalLayout_4;
@@ -124,6 +125,10 @@ public:
         label_8->setObjectName("label_8");
         label_8->setGeometry(QRect(90, 180, 281, 41));
         label_8->setFont(font);
+        pushButton_wyloguj = new QPushButton(page);
+        pushButton_wyloguj->setObjectName("pushButton_wyloguj");
+        pushButton_wyloguj->setGeometry(QRect(510, 10, 171, 41));
+        pushButton_wyloguj->setFont(font);
         stackedWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName("page_2");
@@ -203,6 +208,7 @@ public:
         label_id->setText(QString());
         pushButton_przelew->setText(QCoreApplication::translate("secondwindow", "Wykonaj przelew", nullptr));
         label_8->setText(QCoreApplication::translate("secondwindow", "Historia przelew\303\263w.", nullptr));
+        pushButton_wyloguj->setText(QCoreApplication::translate("secondwindow", "WYLOGUJ", nullptr));
         label_4->setText(QCoreApplication::translate("secondwindow", "Twoje id:", nullptr));
         label_id_2->setText(QString());
         label_5->setText(QCoreApplication::translate("secondwindow", "Numer konta(id):", nullptr));
