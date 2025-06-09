@@ -10,11 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 
-    QString sciezka = QDir::toNativeSeparators("C:/Users/karol/Documents/vabank/baza1.db"); //tu trzeba wrzucic baze do folderu w ktorym znajduje sie projekt
+    QString sciezka =  "baza1.db";
     qDebug() << "Ścieżka do bazy:" << sciezka;
 
     DB_Connection = QSqlDatabase::addDatabase("QSQLITE");
     DB_Connection.setDatabaseName(sciezka);
+
 
     if(DB_Connection.open()){
         qDebug() << "Polaczenie gut";
@@ -54,7 +55,7 @@ void MainWindow::on_pushButton_login_clicked()
         qDebug() << "Błąd zapytania: " << query.lastError().text();
     }
 
-    QSqlDatabase::database().commit(); //to powinno byc w ifie, po co commit jak sie wywalilo zapytanie
+    QSqlDatabase::database().commit();
     DB_Connection.close();
 }
 
@@ -183,7 +184,7 @@ void MainWindow::on_pushButton_wyplata_clicked() //podumam czy nie da sie tego z
     double bilans1,bilans2; // sprawdzanie czy wgl sie cos wyplacilo
     if (!okKwota || !okId || kwota <= 0) {
         QMessageBox::warning(this, "Błąd", "Wprowadź poprawne dane.");
-        return; //znowu void returnuje
+        return;
     }
     QSqlDatabase db = QSqlDatabase::database();
     if(!db.isOpen()) db.open();

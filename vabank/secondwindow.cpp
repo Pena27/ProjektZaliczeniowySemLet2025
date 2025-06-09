@@ -44,7 +44,7 @@ void secondwindow::daneuzytkownika(){
         qDebug() << "Błąd SELECT:" << q.lastError().text();
         ui->label_imie ->setText("Błąd bazy");
         ui->label_balans->setText("---");
-        return; //return na voidzie
+        return;
     }
 
     if (q.next()) {
