@@ -39,7 +39,7 @@ void MainWindow::on_pushButton_login_clicked()
     query.prepare("SELECT id FROM login WHERE login = :login AND haslo = :haslo LIMIT 1"); //trzeba zrobic mechanizm sprawdzania w bazie, nie limitujac w sql
     query.bindValue(":login", login);
     query.bindValue(":haslo", password);
-        if (query.exec()) {
+    if (query.exec()) {
         if (query.exec() && query.next()) { //czemu tu nie ma tylko query.next(), przeciez query.exec musi byc 1
             idzbazy = query.value(0).toInt();
             qDebug() << "Zalogowano. ID uzytkownika:" << idzbazy;
@@ -73,29 +73,23 @@ void MainWindow::on_pushButton_anuluj_clicked() // cofanie do logowania
 
 void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wysylanie danych do bazy.
 {
-    QString login = ui->lineEdit_login_2->text(); //tego sie nie da w liscie zrobic? Np ze login to element o id 0 i etc
-    QString haslo = ui->lineEdit_haslo_2->text(); //robisz wtedy uzupelnianie w petli a nie taki makaron
-    QString imie = ui->lineEdit_imie->text();
-    QString nazwisko = ui->lineEdit_nazwisko->text();
-    QString email = ui->lineEdit_adres_email->text();
-    QString numer_tel = ui->lineEdit_numer_telefonu->text();
-    QString Ulica_i_nr = ui->lineEdit_ulica->text();
-    QString Miasto = ui->lineEdit_miasto->text();
-    QSqlQuery query;
-    query.prepare("INSERT INTO login (login, haslo, imie, nazwisko, email, numer_tel, Miasto, Ulica_i_nr) VALUES (:login, :haslo, :imie, :nazwisko, :email, :numer_tel, :Miasto, :Ulica_i_nr)");
-    query.bindValue(":login",login); //wtedy po petli przelatujesz i bindujesz, masz 2 listy - stringow i wartosci i po tym iterujesz
-    query.bindValue(":haslo",haslo); //przejrzystsze to i wielokrotne uzycie kodu
-    query.bindValue(":imie",imie);
-    query.bindValue(":nazwisko",nazwisko);
-    query.bindValue(":email",email);
-    query.bindValue(":numer_tel",numer_tel);
-    query.bindValue(":Ulica_i_nr",Ulica_i_nr);
-    query.bindValue(":Miasto",Miasto);
-    if (query.exec()) {
-        QMessageBox::information(this, "Sukces", "Dziala");
+    QStringList atrybuty = {
+        "login", "haslo", "imie", "nazwisko", "email",
+        "numer_tel", "Ulica_i_nr", "Miasto"
+    };
 
-    } else {
-        QMessageBox::critical(this, "Błąd", "nie dziala");
+    QStringList atrybutyUi = {
+        "lineEdit_login_2", "lineEdit_haslo_2", "lineEdit_imie", "lineEdit_nazwisko",
+        "lineEdit_adres_email", "lineEdit_numer_telefonu", "lineEdit_ulica", "lineEdit_miasto"
+    };
+
+    QMap<QString, QString> dane;
+
+    for (int i = 0; i < atrybuty.size(); ++i) {
+        QLineEdit* lineEdit = this->findChild<QLineEdit*>(atrybutyUi[i]);
+        if (lineEdit) {
+            dane[atrybutyUi[i]] = lineEdit->text();
+        }
     }
 }
 
@@ -211,7 +205,7 @@ void MainWindow::on_pushButton_wyplata_clicked() //podumam czy nie da sie tego z
 
     if (q.exec() && bilans1!=bilans2) //Gdzie wartosc bilans2? W tym kodzie jest nieprzypisany chyba ze jest w SQL taki parametr {
     {
-    db.commit();
+        db.commit();
         qDebug() << bilans1;
         qDebug() << bilans2;
         QMessageBox::information(this, "Sukces", "Wypłata wykonana pomyślnie.");
