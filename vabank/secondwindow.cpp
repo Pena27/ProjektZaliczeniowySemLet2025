@@ -151,7 +151,7 @@ void secondwindow::wyswietlHistorie(){
         double kwota = q.value("kwota").toDouble();
         QString data = q.value("data").toString();
 
-        QColor kolor = (nadawca == m_idzbazy) ? QColor(220, 0, 0) : QColor(0, 150, 0);  // czerwony lub zielony
+        QColor kolor = (nadawca == m_idzbazy) ? QColor(220, 0, 0) : QColor(0, 150, 0);
         QString kwotaStr = QString("%1 zł").arg(kwota, 0, 'f', 2);
 
         QTableWidgetItem *itemNadawca = new QTableWidgetItem(QString::number(nadawca));
