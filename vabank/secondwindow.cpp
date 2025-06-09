@@ -1,5 +1,6 @@
 #include "secondwindow.h"
 #include "ui_secondwindow.h"
+#include "mainwindow.h"
 
 #include <QSqlQuery>
 #include <QSqlError>
@@ -145,11 +146,36 @@ void secondwindow::wyswietlHistorie(){
     int row = 0;
 
     while (q.next()) {
+        int nadawca = q.value("nadawca_id").toInt();
+        int odbiorca = q.value("odbiorca_id").toInt();
+        double kwota = q.value("kwota").toDouble();
+        QString data = q.value("data").toString();
+
+        QColor kolor = (nadawca == m_idzbazy) ? QColor(220, 0, 0) : QColor(0, 150, 0);  // czerwony lub zielony
+        QString kwotaStr = QString("%1 zł").arg(kwota, 0, 'f', 2);
+
+        QTableWidgetItem *itemNadawca = new QTableWidgetItem(QString::number(nadawca));
+        QTableWidgetItem *itemOdbiorca = new QTableWidgetItem(QString::number(odbiorca));
+        QTableWidgetItem *itemKwota = new QTableWidgetItem(kwotaStr);
+        QTableWidgetItem *itemData = new QTableWidgetItem(data);
+
+        itemKwota->setForeground(QBrush(kolor));
+
         ui->tableWidget_historia->insertRow(row);
-        ui->tableWidget_historia->setItem(row, 0, new QTableWidgetItem(q.value("nadawca_id").toString()));
-        ui->tableWidget_historia->setItem(row, 1, new QTableWidgetItem(q.value("odbiorca_id").toString()));
-        ui->tableWidget_historia->setItem(row, 2, new QTableWidgetItem(QString("%1 zł").arg(q.value("kwota").toDouble(), 0, 'f', 2)));
-        ui->tableWidget_historia->setItem(row, 3, new QTableWidgetItem(q.value("data").toString()));
+        ui->tableWidget_historia->setItem(row, 0, itemNadawca);
+        ui->tableWidget_historia->setItem(row, 1, itemOdbiorca);
+        ui->tableWidget_historia->setItem(row, 2, itemKwota);
+        ui->tableWidget_historia->setItem(row, 3, itemData);
+
         row++;
     }
 }
+
+
+void secondwindow::on_pushButton_wyloguj_clicked()
+{
+    MainWindow *main = new MainWindow();
+    main->show();
+    this->close();
+}
+

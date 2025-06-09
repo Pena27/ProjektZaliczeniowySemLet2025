@@ -22,6 +22,8 @@ private slots:
 
     void on_pushButton_wykonaj_przelew_clicked();
 
+    void on_pushButton_wyloguj_clicked();
+
 private:
     Ui::secondwindow *ui;
     int m_idzbazy { -1 };
