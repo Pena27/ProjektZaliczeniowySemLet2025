@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtSql>
 #include <QMessageBox>
+#include <cmath>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -20,21 +21,10 @@ public:
 
 private slots:
     void obsluzPrzycisk(int d);
-    void on_pushButton_login_clicked();
 
-    void on_pushButton_zarejestruj_sie_clicked();
+    void on_pushButton_zarejestruj_sie_2_clicked();
 
-    void on_pushButton_anuluj_clicked();
-
-    void on_pushButton_zarejestruj_sie_2_clicked(); //musimy to inaczej podpisac
-
-    void on_pushButton_logowanie_do_banku_clicked();
-
-    void on_pushButton_bankomat_clicked();
-
-    void on_pushButton_anuluj_2_clicked(); //to tez
-
-    void on_pushButton_anuluj_3_clicked(); //to tez
+    void on_pushButton_login_clicked(); //zrobione
 
     void on_pushButton_wplata_clicked();
 
