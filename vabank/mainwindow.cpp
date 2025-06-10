@@ -293,8 +293,7 @@ void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wy
     else
     {QMessageBox::critical(this, "Błąd", "Rejestracja nieudana");}
 
-
-    on_pushButton_login_clicked();
+    obsluzPrzycisk(0);
     QSqlDatabase::database().commit();
     DB_Connection.close();
 
