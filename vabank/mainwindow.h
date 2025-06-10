@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtSql>
 #include <QMessageBox>
+#include <cmath>
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;

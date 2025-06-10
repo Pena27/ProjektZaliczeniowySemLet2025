@@ -1,7 +1,7 @@
 #include "secondwindow.h"
 #include "ui_secondwindow.h"
 #include "mainwindow.h"
-
+#include <cmath>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
@@ -28,12 +28,6 @@ secondwindow::~secondwindow()
     delete ui;
 }
 
-// void err()
-// {
-//     qDebug() << "Błąd SELECT:" << q.lastError().text();
-//     ui->label_balans->setText("---");
-//     return;
-// }
 
 void secondwindow::daneuzytkownika(){
     //przygotowanie zapytania
@@ -96,7 +90,10 @@ void secondwindow::on_pushButton_wykonaj_przelew_clicked() // przelew na inne ko
     //przygotowanie zmiennych
     bool okKwota, okId;
     double kwota = ui->lineEdit_przelew_kwota->text().toDouble(&okKwota);
+    kwota = round(kwota*100)/100;
+    qDebug()<<kwota;
     int odbiorcaId = ui->lineEdit_przelew_nr__konta->text().toInt(&okId);
+
 
     //sprawdzenie kwoty i id
     if (!okKwota || !okId || kwota <= 0) {

@@ -78,6 +78,7 @@ void MainWindow::on_pushButton_wplata_clicked() //
 {
     bool okKwota, okId;
     double kwota = ui->lineEdit_kwota_bankomat->text().toDouble(&okKwota);
+    kwota = round(kwota*100)/100;
     int id = ui->lineEdit_numer_konta_id_bankomat->text().toInt(&okId);
     if (!okKwota || !okId || kwota <= 0) {
         QMessageBox::warning(this, "Błąd", "Wprowadź poprawne dane.");
@@ -108,6 +109,7 @@ void MainWindow::on_pushButton_wyplata_clicked()// //podumam czy nie da sie tego
 {
     bool okKwota, okId;
     double kwota = ui->lineEdit_kwota_bankomat->text().toDouble(&okKwota);
+    kwota = round(kwota*100)/100;
     int id = ui->lineEdit_numer_konta_id_bankomat->text().toInt(&okId);
     double bilans1,bilans2; // sprawdzanie czy wgl sie cos wyplacilo
     if (!okKwota || !okId || kwota <= 0) {
