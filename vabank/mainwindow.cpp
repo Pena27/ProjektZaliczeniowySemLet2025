@@ -138,7 +138,7 @@ void MainWindow::on_pushButton_wyplata_clicked()// //podumam czy nie da sie tego
 
     bilans2 = q3.value("balans").toDouble();
 
-    if (q.exec() && bilans1!=bilans2) //Gdzie wartosc bilans2? W tym kodzie jest nieprzypisany chyba ze jest w SQL taki parametr {
+    if (q.exec() && bilans1!=bilans2)
     {
         db.commit();
         qDebug() << bilans1;
