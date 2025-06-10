@@ -159,6 +159,7 @@ void MainWindow::on_pushButton_login_clicked() //
     QSqlDatabase::database().transaction();
 
     QString login = ui->lineEdit_login->text();
+
     QString password = ui->lineEdit_2_password->text();
     QSqlQuery query;
 
@@ -211,23 +212,83 @@ void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wy
 
     //przypisanie wartosci atrybutu -> atrybut w bazie
     QMap<QString, QString> dane;
-    for (int i = 0; i < atrybuty.size(); ++i) {
+    for (int i = 0; i < atrybuty.size(); ++i)
+    {
         QLineEdit* lineEdit = this->findChild<QLineEdit*>(atrybutyUi[i]);
-        if (lineEdit) {
+        if (lineEdit)
+        {
             dane[atrybuty[i]] = lineEdit->text();
         }
     }
 
+    //sprawdzanie czy wszystkie dane sa wpisane
+    for(int i = 0; i< atrybuty.size();i++)
+    {
+        QString wprowadzonaWartosc = dane[atrybuty[i]];
+        if(wprowadzonaWartosc.isEmpty())
+        {
+            QMessageBox::warning(this, "Błąd", "Wypełnij wszystkie wymagane pola!");
+            return;
+        }
+        for (const QChar &ch : wprowadzonaWartosc)
+        {
+            if (!ch.isLetter() && ch != ' ')
+            {
+                    if(i==2)
+                    {
+                        QMessageBox::warning(this, "Błąd", "Wprowadz poprawne imie!");
+                        ui->lineEdit_imie->setFocus();
+                        return;
+                    }
+                    else if(i==3)
+                    {
+                        QMessageBox::warning(this, "Błąd", "Wprowadz poprawne nazwisko!");
+                        ui->lineEdit_nazwisko->setFocus();
+                        return;
+                    }
+                    else if(i==4)
+                    {
+                        if (!wprowadzonaWartosc.contains("@") || !wprowadzonaWartosc.contains(".") || wprowadzonaWartosc.length() < 5)
+                        {
+                            QMessageBox::warning(this, "Błąd", "Podaj poprawny adres email!");
+                            ui->lineEdit_adres_email->setFocus();
+                            return;
+                        }
+                    }
+                }
+        }
+        if(i == 5) // Numer telefonu
+        {
+            if(wprowadzonaWartosc.length() < 9)
+            {
+                QMessageBox::warning(this, "Błąd", "Numer telefonu musi mieć co najmniej 9 cyfr!");
+                ui->lineEdit_numer_telefonu->setFocus();
+                return;
+            }
+            for (const QChar &ch : wprowadzonaWartosc)
+            {
+                if (!ch.isDigit() && ch != ' ' && ch != '-')
+                {
+                    QMessageBox::warning(this, "Błąd", "Numer telefonu może zawierać tylko cyfry, spacje i myślniki!");
+                    ui->lineEdit_numer_telefonu->setFocus();
+                    return;
+                }
+            }
+        }
+
+    }
+
     //przypisanie wartosci do zapytania
-    for (auto it = dane.begin(); it != dane.end(); ++it) {
+    for (auto it = dane.begin(); it != dane.end(); ++it)
+    {
         query.bindValue(":" + it.key(), it.value());
     }
 
     //sprawdzenie zapytania
     if (query.exec())
-    {QMessageBox::information(this, "Sukces", "Dziala");}
+    {QMessageBox::information(this, "Sukces", "Utworzono konto");}
     else
-    {QMessageBox::critical(this, "Błąd", "nie dziala");}
+    {QMessageBox::critical(this, "Błąd", "Rejestracja nieudana");}
 }
 
 
