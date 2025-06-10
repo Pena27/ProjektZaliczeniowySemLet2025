@@ -28,3 +28,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     ChatGPT Image 9 maj 2025, 09_32_38.png
+
+RESOURCES += \
+    resources.qrc

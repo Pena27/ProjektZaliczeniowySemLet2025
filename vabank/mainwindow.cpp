@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     }
 
-    QString sciezka = QDir::toNativeSeparators("C:/Users/piotr/Desktop/ProjektZaliczeniowySemLet2025/vabank/baza1.db");
+    QString sciezka = "baza1.db";
     qDebug() << "Ścieżka do bazy:" << sciezka;
 
     DB_Connection = QSqlDatabase::addDatabase("QSQLITE");
@@ -186,6 +186,7 @@ void MainWindow::on_pushButton_login_clicked() //
     } else {
         qDebug() << "Blad zapytania: " << query.lastError().text();
     }
+
     QSqlDatabase::database().commit();
     DB_Connection.close();
 }
@@ -291,6 +292,12 @@ void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wy
     {QMessageBox::information(this, "Sukces", "Utworzono konto");}
     else
     {QMessageBox::critical(this, "Błąd", "Rejestracja nieudana");}
+
+
+    on_pushButton_login_clicked();
+    QSqlDatabase::database().commit();
+    DB_Connection.close();
+
 }
 
 
