@@ -298,14 +298,3 @@ void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wy
     DB_Connection.close();
 
 }
-
-
-
-
-
-
-
-
-
-
-
