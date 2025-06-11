@@ -82,7 +82,7 @@ void MainWindow::on_pushButton_wplata_clicked() //
     int id = ui->lineEdit_numer_konta_id_bankomat->text().toInt(&okId);
     if (!okKwota || !okId || kwota <= 0) {
         QMessageBox::warning(this, "Błąd", "Wprowadź poprawne dane.");
-        return; //void returnuje???
+        return;
     }
     QSqlDatabase db = QSqlDatabase::database();
     if(!db.isOpen()) db.open();
@@ -114,7 +114,7 @@ void MainWindow::on_pushButton_wyplata_clicked()// //podumam czy nie da sie tego
     double bilans1,bilans2; // sprawdzanie czy wgl sie cos wyplacilo
     if (!okKwota || !okId || kwota <= 0) {
         QMessageBox::warning(this, "Błąd", "Wprowadź poprawne dane.");
-        return; //znowu void returnuje
+        return;
     }
     QSqlDatabase db = QSqlDatabase::database();
     if(!db.isOpen()) db.open();
@@ -210,8 +210,6 @@ void MainWindow::on_pushButton_zarejestruj_sie_2_clicked() // rejestracja, ze wy
     QSqlQuery query;
     query.prepare("INSERT INTO login (login, haslo, imie, nazwisko, email, numer_tel, Miasto, Ulica_i_nr) VALUES (:login, :haslo, :imie, :nazwisko, :email, :numer_tel, :Miasto, :Ulica_i_nr)");
 
-
-    //tu jest blad
 
     //przypisanie wartosci atrybutu -> atrybut w bazie
     QMap<QString, QString> dane;

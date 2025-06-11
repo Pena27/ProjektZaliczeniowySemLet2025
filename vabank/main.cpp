@@ -8,7 +8,6 @@ int main(int argc, char *argv[])
 
     QIcon appIcon(":/Ikona.png");
     a.setWindowIcon(appIcon);
-    a.setWindowIcon(appIcon);
 
     MainWindow w;
     w.show();
