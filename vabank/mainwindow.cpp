@@ -132,6 +132,7 @@ void MainWindow::on_pushButton_wyplata_clicked()// //podumam czy nie da sie tego
     q.prepare("UPDATE login SET balans = balans -:kwota WHERE id = :id AND balans >= :kwota");
     q.bindValue(":kwota",kwota);
     q.bindValue(":id",id);
+    q.exec();
 
     q3.prepare("SELECT balans FROM login where id = :id");
     q3.bindValue(":id",id);
@@ -140,7 +141,7 @@ void MainWindow::on_pushButton_wyplata_clicked()// //podumam czy nie da sie tego
 
     bilans2 = q3.value("balans").toDouble();
 
-    if (q.exec() && bilans1!=bilans2)
+    if (bilans1!=bilans2)
     {
         db.commit();
         qDebug() << bilans1;

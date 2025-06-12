@@ -74,12 +74,12 @@ void secondwindow::danedoprzelewu(){
     }
     else
     {
-    if (q.next()) {
-        const double  balans = q.value("balans").toDouble();
-        ui->label_balans_2->setText(QString("%1 zł").arg(balans, 0, 'f', 2));
-        ui->label_id_2->setText(QString("%1").arg(m_idzbazy));
-        return;
-    }}
+        if (q.next()) {
+            const double  balans = q.value("balans").toDouble();
+            ui->label_balans_2->setText(QString("%1 zł").arg(balans, 0, 'f', 2));
+            ui->label_id_2->setText(QString("%1").arg(m_idzbazy));
+            return;
+        }}
     //postepowanie w przypadku gdy q.exec lub !q.next()
     ui->label_balans->setText("---");
 }
